@@ -1,0 +1,5 @@
+node_modules/
+dist/
+
+# Grev müziği: lisansı bize ait değil, depoya girmez. Yoksa grev sessiz oynanır.
+public/ses/m7.mp3

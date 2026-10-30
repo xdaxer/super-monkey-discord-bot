@@ -1,0 +1,212 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/*
+ * Tasarım belirteçleri. Ekranlar renkleri yalnız bu adlarla kullanır
+ * (bg-yuzey, text-soluk, border-cizgi, text-muz ...); ham hex yazılmaz.
+ *
+ * Yön: sıcak, koyu bir "oyun salonu". Zemin neredeyse siyah ve hafif sıcak;
+ * tek güçlü vurgu muz sarısı/altın. Başarı yeşil, kayıp gül kırmızısı.
+ */
+@theme static {
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Geist Variable', ui-sans-serif, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
+  --color-zemin: #0c0b09;
+  --color-yuzey: #151310;
+  --color-yuzey-2: #1c1a16;
+  --color-yuzey-3: #25221d;
+  --color-cizgi: #2e2a23;
+  --color-cizgi-guclu: #403a30;
+  /* Metin üç kademe (HIG etiket hiyerarşisi). Hepsi en koyu yüzeyde (yuzey-3)
+     bile WCAG AA 4.5:1'i geçer: metin 13.8, soluk 7.0, silik 4.7. */
+  --color-metin: #f4efe6;
+  --color-soluk: #b3ab9b;
+  --color-silik: #938b7c;
+
+  --color-muz: #ffd43b;
+  --color-muz-koyu: #e8a400;
+  --color-muz-acik: #fff3b0;
+  --color-muz-metin: #1a1406;
+
+  --color-yesil: #34d399;
+  --color-yesil-koyu: #059669;
+  --color-kirmizi: #fb7185;
+  --color-kirmizi-koyu: #e11d48;
+  --color-mavi: #7dd3fc;
+  --color-mor: #c4b5fd;
+  --color-turuncu: #fdba74;
+
+  /* Kart nadirlikleri (lib/kasalar.js NADIRLIKLER ile aynı sıra) */
+  --color-siradan: #a1a1aa;
+  --color-nadir: #60a5fa;
+  --color-destansi: #c084fc;
+  --color-efsanevi: #fbbf24;
+  --color-mitik: #f87171;
+
+  --radius-kart: 16px;
+  --shadow-kart: 0 1px 0 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-parilti: 0 0 0 1px rgb(255 212 59 / 0.35), 0 0 32px -6px rgb(255 212 59 / 0.45);
+
+  --animate-parla: parla 2.4s ease-in-out infinite;
+  --animate-salla: salla 0.4s ease-in-out;
+  --animate-yukari: yukari 0.35s ease-out;
+  --animate-belir: belir 0.2s ease-out;
+  --animate-solukla: solukla 0.15s ease-in forwards;
+  /* iOS sayfa eğrisi: hızlı çıkış, yumuşak oturma. */
+  --animate-sayfa-gel: sayfa-gel 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sayfa-cik: sayfa-cik 0.24s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+
+  @keyframes parla {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+  @keyframes salla {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  @keyframes yukari {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes belir {
+    from { opacity: 0; }
+  }
+  @keyframes solukla {
+    to { opacity: 0; }
+  }
+  @keyframes sayfa-gel {
+    from { transform: translateY(100%); }
+  }
+  /* "from" yok: aşağı çekilmiş sayfa bulunduğu yerden kayarak iner. */
+  @keyframes sayfa-cik {
+    to { transform: translateY(100%); }
+  }
+}
+
+/*
+ * Güvenli alanlar: Discord mobilde kendi değişkenini verir; yoksa (iOS
+ * tarayıcı, yerel önizleme) env(). Çentik, ana çubuk ve yuvarlak köşeler
+ * içeriği örtmesin diye kabuk bunlarla içeri çekilir.
+ */
+:root {
+  --sait: var(--discord-safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --saib: var(--discord-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --sail: var(--discord-safe-area-inset-left, env(safe-area-inset-left, 0px));
+  --sair: var(--discord-safe-area-inset-right, env(safe-area-inset-right, 0px));
+}
+
+/* Sistemde "Karşıtlığı artır" açıkken: ikincil metin ve çizgiler belirginleşir. */
+@media (prefers-contrast: more) {
+  :root {
+    --color-soluk: #d6cfc1;
+    --color-silik: #b8b0a0;
+    --color-cizgi: #4f483c;
+    --color-cizgi-guclu: #6b6252;
+  }
+}
+
+@layer base {
+  html, body, #uygulama {
+    height: 100%;
+  }
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Kendi basılma durumlarımız var; mobildeki gri dokunma parlaması ve
+       çift dokunma yakınlaştırma gecikmesi olmasın. */
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, a, input, select, textarea, label, summary, [role='button'] {
+    touch-action: manipulation;
+  }
+  #uygulama {
+    padding-top: var(--sait);
+    padding-left: var(--sail);
+    padding-right: var(--sair);
+  }
+  body {
+    @apply bg-zemin text-metin font-sans text-[15px] leading-normal overflow-hidden;
+    /* Çok hafif sıcak ışık: düz siyah ekran hissini kırar. */
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, rgb(255 212 59 / 0.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgb(232 164 0 / 0.04), transparent 60%);
+  }
+  h1, h2, h3 {
+    @apply font-display tracking-tight;
+  }
+  ::selection {
+    background: rgb(255 212 59 / 0.35);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-cizgi-guclu) transparent;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-muz);
+    outline-offset: 2px;
+  }
+}
+
+/*
+ * Sayılar: ayrı bir eş aralıklı yazı tipi yerine aynı yazı tipinin sabit
+ * genişlikli rakamları (HIG: az yazı tipi; SF'deki monospacedDigit gibi).
+ * Rakamlar değişirken genişlik oynamaz, "4 sa 45 dk" gibi metin doğal kalır.
+ */
+@utility sayi {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+@utility yuzey-kart {
+  background: linear-gradient(180deg, var(--color-yuzey-2), var(--color-yuzey));
+  border: 1px solid var(--color-cizgi);
+  border-radius: var(--radius-kart);
+  box-shadow: var(--shadow-kart);
+}
+
+/*
+ * Seçilebilir kart (radyo/aç-kapa): seçiliyken çerçeve renginin yanında
+ * köşede onay işareti de çıkar (HIG: durumu yalnız renkle verme).
+ * Kullanım: class="secim" + aria-checked / aria-pressed.
+ */
+@utility secim {
+  position: relative;
+  &[aria-checked='true']::after,
+  &[aria-pressed='true']::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 2px var(--color-zemin);
+    background: var(--color-muz) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1406' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 12px no-repeat;
+  }
+}
+
+/* Parlak kart görseli */
+@utility parlak {
+  filter: drop-shadow(0 0 4px #ffe066) drop-shadow(0 0 10px #ffd43b);
+}
+
+/*
+ * "Hareketi azalt" açıkken: döngüsel ve kayan animasyonlar durur, geçişler
+ * anında olur (motion kütüphanesi App'teki MotionConfig ile ayrıca uyar).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

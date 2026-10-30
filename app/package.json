@@ -1,0 +1,32 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Tek sunuculuk Türkçe Discord botu: moderasyon, destek talepleri, seviye, muz ekonomisi ve Discord Activity arayüzü",
+  "license": "AGPL-3.0-only",
+  "author": "daxer",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "deploy": "node deploy-commands.js",
+    "verify": "node scripts/verify-env.js",
+    "test": "node --test",
+    "kanallar": "node scripts/kanal-kur.js",
+    "uyelik": "node scripts/uyelik-kur.js",
+    "ozelses": "node scripts/ozelses-kur.js",
+    "seviyerol": "node scripts/seviye-rol-kur.js",
+    "muzemoji": "node scripts/muz-emoji-kur.js",
+    "rozetrol": "node scripts/rozet-rol-kur.js",
+    "dmgecmis": "node scripts/dm-gecmis.js",
+    "prestijrol": "node scripts/prestij-rol-kur.js",
+    "rolikon": "node scripts/rol-ikon-kur.js",
+    "bildirimpanel": "node scripts/bildirim-panel-kur.js",
+    "davetaktar": "node scripts/davet-aktar.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9",
+    "discord.js": "^14.27.0",
+    "dotenv": "^18.0.1",
+    "gifenc": "1.0.3"
+  }
+}

@@ -1,0 +1,18 @@
+# Gizli değerler. .env asla depoya girmemeli — .env.example örnek olarak yeterli.
+.env
+.env.local
+.env.*.local
+
+# Bağımlılıklar
+node_modules/
+
+# Günlükler
+*.log
+npm-debug.log*
+
+# Yerel veritabanı dosyaları (kalıcı veri kararı sonrası kullanılacak)
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+*.db

@@ -1,0 +1,17 @@
+# Satır sonu politikası: depoda her zaman LF.
+# Windows'tan dosya taşındığında CRLF karışmasını engeller.
+* text=auto eol=lf
+
+# Açıkça metin olarak işaretlenenler
+*.js   text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.py   text eol=lf
+
+# İkili dosyalar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
